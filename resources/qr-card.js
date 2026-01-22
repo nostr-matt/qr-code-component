@@ -46,6 +46,12 @@ export class QrCard extends HTMLElement {
                 padding: var(--spacing-s);
             }
 
+            ::slotted([slot="head"]) {
+                margin: 0;
+                font-size: inherit;
+                font-weight: inherit;
+            }
+
             .head {
                 color: var(--color-head);
                 font-size: var(--text-head);
@@ -56,6 +62,12 @@ export class QrCard extends HTMLElement {
                 color: var(--color-content);
                 font-size: var(--text-content);
             }
+
+            .content > ::slotted(*) {
+                margin: 0;
+                font-size: inherit;
+                font-weight: inherit;
+            }
         `;
 
         const stylesheet = new CSSStyleSheet();
@@ -65,6 +77,10 @@ export class QrCard extends HTMLElement {
 
     constructor() {
         super();
+
+        this._internals = this.attachInternals();
+        this._internals.role = "article";
+
         const root = this.attachShadow({ mode: "open" });
         root.adoptedStyleSheets = [this.constructor.styles];
         root.innerHTML = `
@@ -72,9 +88,9 @@ export class QrCard extends HTMLElement {
                 <slot name="image"></slot>
             </figure>
             <section class="text">
-                <div class="head">
+                <header class="head">
                     <slot name="head"></slot>
-                </div>
+                </header>
                 <div class="content">
                     <slot></slot>
                 </div>
